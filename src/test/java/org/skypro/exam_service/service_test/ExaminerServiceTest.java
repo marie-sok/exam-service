@@ -1,10 +1,5 @@
 package org.skypro.exam_service.service_test;
 
-import exception.QuestionIllegalArgumentException;
-import impl.ExaminerService;
-import impl.JavaQuestionService;
-import impl.MathQuestionService;
-import model.Question;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.skypro.exam_service.exception.QuestionIllegalArgumentException;
+import org.skypro.exam_service.impl.ExaminerService;
+import org.skypro.exam_service.impl.JavaQuestionService;
+import org.skypro.exam_service.impl.MathQuestionService;
+import org.skypro.exam_service.model.Question;
 
 import java.util.Collection;
 import java.util.Set;

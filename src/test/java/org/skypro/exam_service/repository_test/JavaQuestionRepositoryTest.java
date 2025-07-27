@@ -1,18 +1,25 @@
 package org.skypro.exam_service.repository_test;
 
-import model.Question;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.skypro.exam_service.model.Question;
 import repository.JavaQuestionRepository;
 import repository.QuestionRepository;
+
+import java.util.function.IntPredicate;
 
 public class JavaQuestionRepositoryTest {
 
 
-    private final QuestionRepository questionRepository = new JavaQuestionRepository();
+    private final QuestionRepository questionRepository = new JavaQuestionRepository() {
+        @Override
+        public IntPredicate add(String s, String s1) {
+            return null;
+        }
+    };
 
     @BeforeEach
     public void beforeEach() {

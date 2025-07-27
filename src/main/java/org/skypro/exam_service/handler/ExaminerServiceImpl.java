@@ -1,45 +1,44 @@
-package handler;
+package org.skypro.exam_service.handler;
 
-import exception.QuestionIllegalArgumentException;
+import org.skypro.exam_service.exception.QuestionIllegalArgumentException;
 import org.skypro.exam_service.model.Question;
+import org.skypro.exam_service.service.ExamService;
+import org.skypro.exam_service.service.QuestionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import service.ExaminerService;
-import service.QuestionService;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-
 @Service
-public class ExaminerServiceImpl implements ExaminerService {
+public class ExaminerServiceImpl implements ExamService {
     private final QuestionService javaQuestionService;
     private final QuestionService mathQuestionService;
-    public ExaminerServiceImpl(@Qualifier("javaQuestionService") QuestionService javaQuestionService,
-                               @Qualifier("mathQuestionService") QuestionService mathQuestionService) {
+
+    public ExaminerServiceImpl(
+            @Qualifier("javaQuestionService") QuestionService javaQuestionService,
+            @Qualifier("mathQuestionService") QuestionService mathQuestionService) {
         this.javaQuestionService = javaQuestionService;
         this.mathQuestionService = mathQuestionService;
     }
+
     @Override
     public Collection<Question> getQuestions(int amount) {
-        if (javaQuestionService.getAll().size() + mathQuestionService.getAll().size() < amount) {
-            throw new QuestionIllegalArgumentException();
+        int totalQuestions = javaQuestionService.getAll().size() + mathQuestionService.getAll().size();
+        if (totalQuestions < amount) {
+            throw new QuestionIllegalArgumentException("Not enough questions available");
         }
-        Set<Question> randomQuestions = new HashSet<>();
+
+        Set<Question> questions = new HashSet<>();
         Random random = new Random();
-        while (randomQuestions.size() < amount) {
-            int questionRandom = random.nextInt(2);
-            switch (questionRandom) {
-                case 0:
-                    randomQuestions.add(javaQuestionService.getRandomQuestion());
-                    break;
-                case 1:
-                    randomQuestions.add(mathQuestionService.getRandomQuestion());
-                    break;
-            }
+
+        while (questions.size() < amount) {
+            QuestionService service = random.nextBoolean() ? javaQuestionService : mathQuestionService;
+            questions.add(service.getRandomQuestion());
         }
-        return randomQuestions;
+
+        return questions;
     }
 }

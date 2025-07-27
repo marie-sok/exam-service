@@ -1,34 +1,35 @@
-package controller;
+package org.skypro.exam_service.controller;
 
-import model.Question;
-import org.skypro.exam_service.controller.GetMapping;
-import org.skypro.exam_service.controller.RequestParam;
-import org.skypro.exam_service.controller.RestController;
-import service.QuestionService;
+import org.skypro.exam_service.model.Question;
+import org.skypro.exam_service.service.QuestionService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collection;
 
 @RestController
-@GetMapping("/exam")
+@RequestMapping("/exam/java")
 public class JavaQuestionController {
+    private final QuestionService questionService;
 
-    public final QuestionService service;
-
-    public JavaQuestionController(QuestionService service) {
-        this.service = service;
+    public JavaQuestionController(@Qualifier("javaQuestionService") QuestionService questionService) {
+        this.questionService = questionService;
     }
 
-    @GetMapping("/java/add")
-    public Question addQuestion(@RequestParam("question") String question, @RequestParam("answer") String answer){
-        return service.add(question,answer);
+    @PostMapping("/add")
+    public Question addQuestion(@RequestParam String question, @RequestParam String answer) {
+        return questionService.add(question, answer);
     }
-    @GetMapping("/java/remove")
-    public Question removeQuestion(@RequestParam("question") String question, @RequestParam("answer") String answer){
-        Question newQuestion = new Question(question, answer);
-        return service.remove(newQuestion);
+
+    @DeleteMapping("/remove")
+    public Question removeQuestion(@RequestParam String question, @RequestParam String answer) {
+        return questionService.remove(new Question(question, answer));
     }
-    @GetMapping("/java")
+
+    @GetMapping("")
     public Collection<Question> getQuestions() {
-        return service.getAll();
+        return questionService.getAll();
     }
 }

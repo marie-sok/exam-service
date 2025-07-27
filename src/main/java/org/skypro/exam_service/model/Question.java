@@ -3,9 +3,8 @@ package org.skypro.exam_service.model;
 import java.util.Objects;
 
 public class Question {
-
-    String question;
-    String answer;
+    private final String question;
+    private final String answer;
 
     public Question(String question, String answer) {
         this.question = question;
@@ -22,9 +21,11 @@ public class Question {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Question question1 = (Question) o;
-        return Objects.equals(question, question1.question) && Objects.equals(answer, question1.answer);
+        return Objects.equals(question, question1.question) &&
+                Objects.equals(answer, question1.answer);
     }
 
     @Override

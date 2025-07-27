@@ -1,54 +1,56 @@
+package org.skypro.exam_service.impl;
 
-import org.skypro.exam_service.exception.QuestionNotFoundException;
 import org.skypro.exam_service.model.Question;
+import org.skypro.exam_service.service.QuestionService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import repository.QuestionRepository;
-import service.QuestionService;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
-@Service
+@RestController
+@RequestMapping("/exam/math")
 public class MathQuestionService implements QuestionService {
+    private final QuestionService questionService;
 
-    private static QuestionRepository repository;
-
-    public MathQuestionService(@Qualifier("mathQuestionRepository") QuestionRepository repository) {
-        this.repository = repository;
+    public MathQuestionService(@Qualifier("mathQuestionService") QuestionService questionService) {
+        this.questionService = questionService;
     }
 
-    public static int greet(String name) {
-        return 0;
+    @PostMapping("/add")
+    public Question addQuestion(@RequestParam String question, @RequestParam String answer) {
+        return questionService.add(question, answer);
     }
 
+    @DeleteMapping("/remove")
+    public Question removeQuestion(@RequestParam String question, @RequestParam String answer) {
+        return questionService.remove(new Question(question, answer));
+    }
 
-    @Override
+    @GetMapping
+    public Collection<Question> getQuestions() {
+        return questionService.getAll();
+    }
+
     public Question add(String question, String answer) {
-        return repository.add(question, answer);
+        return null;
     }
 
     @Override
     public Question remove(Question question) {
-        if (!repository.getAll().contains(question)) {
-            throw new QuestionNotFoundException();
-        }
-        repository.remove(question);
-        return question;
-    }
-    @Override
-    public Collection<Question> getAll() {
-        return repository.getAll();
+        return null;
     }
 
+    @Override
+    public Collection<Question> getAll() {
+        return List.of();
+    }
 
     @Override
     public Question getRandomQuestion() {
-        Random random = new Random();
-        int questionIndex = random.nextInt(repository.getAll().size());
-        List<Question> questionsWithIndex = new ArrayList<>(repository.getAll());
-        return questionsWithIndex.get(questionIndex);
+        return null;
     }
 }

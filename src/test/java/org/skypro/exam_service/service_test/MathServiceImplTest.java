@@ -1,13 +1,12 @@
 package org.skypro.exam_service.service_test;
 
-
-import model.Question;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.skypro.exam_service.impl.MathQuestionService;
+import org.skypro.exam_service.model.Question;
 import repository.QuestionRepository;
 
 import java.util.Set;

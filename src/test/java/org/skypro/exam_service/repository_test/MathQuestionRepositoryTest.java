@@ -1,7 +1,5 @@
 package org.skypro.exam_service.repository_test;
 
-
-import model.Question;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,17 +9,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.skypro.exam_service.exception.QuestionNotFoundException;
 import org.skypro.exam_service.impl.MathQuestionService;
-import repository.MathQuestionRepository;
+import org.skypro.exam_service.model.Question;
 import repository.QuestionRepository;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mockito.Mockito.when;
-import static service.QuestionService.greet;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-
 class MathQuestionRepositoryTest {
 
     @Mock
@@ -29,64 +25,77 @@ class MathQuestionRepositoryTest {
 
     @InjectMocks
     private MathQuestionService questionService;
+
     private Set<Question> questions;
     private Question question1;
     private Question question2;
     private Question question3;
     private Question question4;
-    private org.junit.jupiter.api.Assertions Assert;
+
     @BeforeEach
-    public void beforeEach() {
+    public void setUp() {
         question1 = new Question("Math question 1", "Math answer 1");
         question2 = new Question("Math question 2", "Math answer 2");
         question3 = new Question("Math question 3", "Math answer 3");
         question4 = new Question("Math question 4", "Math answer 4");
+
         questions = new HashSet<>();
         questions.add(question1);
         questions.add(question2);
         questions.add(question3);
     }
+
     @Test
-    void whenNameIsGiven() {
-        String name = "Test";
-        Assert.assertEquals("Hello, Test", greet(name));
+    public void addQuestion_ShouldReturnAddedQuestion() {
+        when(repository.add(question4)).thenReturn(question4);
+
+        Question result = questionService.add(question4.getQuestion(), question4.getAnswer());
+
+        Assertions.assertThat(result).isEqualTo(question4);
+        verify(repository, times(1)).add(any(Question.class));
     }
+
     @Test
-    void whenNameIsNull() {
-        String name = null;
-        Assert.assertEquals("Hello, Anonym",greet(name));
-    }
-    @Test
-    void whenNameIsEmpty() {
-        String name = "";
-        Assert.assertEquals("Hello, Anonymous", MathQuestionRepository.greet(name));
-    }
-    @Test
-    public void addTest() {
-        when(repository.add(question4.getQuestion(), question4.getAnswer())).thenReturn(question4);
-        Assertions.assertThat(questionService.add(question4.getQuestion(), question4.getAnswer())).isEqualTo(question4);
-    }
-    @Test
-    public void removeTest() {
+    public void removeQuestion_WhenExists_ShouldReturnRemovedQuestion() {
         when(repository.getAll()).thenReturn(questions);
         when(repository.remove(question1)).thenReturn(question1);
-        Assertions.assertThat(questionService.remove(question1)).isEqualTo(question1);
+
+        Question result = questionService.remove(question1);
+
+        Assertions.assertThat(result).isEqualTo(question1);
+        verify(repository, times(1)).remove(question1);
     }
+
     @Test
-    public void removeWhenNotFoundTest() {
+    public void removeQuestion_WhenNotExists_ShouldThrowException() {
         when(repository.getAll()).thenReturn(questions);
-        Assertions.assertThatExceptionOfType(QuestionNotFoundException.class)
-                .isThrownBy(() -> questionService.remove(question4));
+
+        Assertions.assertThatThrownBy(() -> questionService.remove(question4))
+                .isInstanceOf(QuestionNotFoundException.class)
+                .hasMessageContaining("Question not found");
+
+        verify(repository, never()).remove(question4);
     }
+
     @Test
-    public void getAllTest() {
+    public void getAllQuestions_ShouldReturnAllQuestions() {
         when(repository.getAll()).thenReturn(questions);
-        Assertions.assertThat(questionService.getAll())
+
+        Set<Question> result = new HashSet<>(questionService.getAll());
+
+        Assertions.assertThat(result)
                 .hasSize(3)
-                .containsExactlyInAnyOrder(
-                        new Question("Math question 1", "Math answer 1"),
-                        new Question("Math question 2", "Math answer 2"),
-                        new Question("Math question 3", "Math answer 3")
-                );
+                .containsExactlyInAnyOrder(question1, question2, question3);
+        verify(repository, times(1)).getAll();
+    }
+
+    @Test
+    public void getRandomQuestion_ShouldReturnQuestionFromRepository() {
+        when(repository.getAll()).thenReturn(Set.of(question1));
+
+        Question result = questionService.getRandomQuestion();
+
+        Assertions.assertThat(result).isEqualTo(question1);
+        verify(repository, times(1)).getAll();
     }
 }
