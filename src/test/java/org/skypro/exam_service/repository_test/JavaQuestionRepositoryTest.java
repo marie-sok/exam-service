@@ -1,61 +1,38 @@
 package org.skypro.exam_service.repository_test;
 
-
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.skypro.exam_service.exception.QuestionNotFoundException;
+import org.skypro.exam_service.impl.JavaQuestionService;
 import org.skypro.exam_service.model.Question;
-import repository.JavaQuestionRepository;
-import repository.QuestionRepository;
 
-import java.util.function.IntPredicate;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JavaQuestionRepositoryTest {
+class JavaQuestionServiceTest {
+    private final JavaQuestionService service = new JavaQuestionService();
 
-
-    private final QuestionRepository questionRepository = new JavaQuestionRepository() {
-        @Override
-        public IntPredicate add(String s, String s1) {
-            return null;
-        }
-    };
-
-    @BeforeEach
-    public void beforeEach() {
-        questionRepository.add("Java question 1", "Java answer 1");
-        questionRepository.add("Java question 2", "Java answer 2");
-        questionRepository.add("Java question 3", "Java answer 3");
-    }
-    @AfterEach
-    public void afterEach() {
-        questionRepository.getAll().stream()
-                .map(e -> questionRepository.remove(e));
-    }
     @Test
-    public void addTest() {
-        int beforeCount = questionRepository.getAll().size();
-        Question expected = new Question("Java question 4", "Java answer 4");
-        Assertions.assertThat(questionRepository.add("Java question 4", "Java answer 4")).isEqualTo(expected)
-                .isIn(questionRepository.getAll());
-        Assertions.assertThat(questionRepository.getAll()).hasSize(beforeCount + 1);
+    void addQuestionTest() {
+        Question question = service.add("Q1", "A1");
+        assertTrue(service.getAll().contains(question));
     }
+
     @Test
-    public void removeTest() {
-        int beforeCount = questionRepository.getAll().size();
-        Question expected = new Question("Java question 1", "Java answer 1");
-        Assertions.assertThat(questionRepository.remove(new Question("Java question 1", "Java answer 1"))).isEqualTo(expected)
-                .isNotIn(questionRepository.getAll());
-        Assertions.assertThat(questionRepository.getAll()).hasSize(beforeCount - 1);
+    void removeQuestionTest() {
+        Question question = service.add("Q2", "A2");
+        Question removed = service.remove(question);
+        assertEquals(question, removed);
+        assertFalse(service.getAll().contains(question));
     }
+
     @Test
-    public void getAllTest() {
-        Assertions.assertThat(questionRepository.getAll())
-                .hasSize(3)
-                .containsExactlyInAnyOrder(
-                        new Question("Java question 1", "Java answer 1"),
-                        new Question("Java question 2", "Java answer 2"),
-                        new Question("Java question 3", "Java answer 3")
-                );
+    void removeNonExistingQuestionTest() {
+        assertThrows(QuestionNotFoundException.class,
+                () -> service.remove(new Question("Q3", "A3")));
+    }
+
+    @Test
+    void getRandomQuestionTest() {
+        service.add("Q4", "A4");
+        assertNotNull(service.getRandomQuestion());
     }
 }

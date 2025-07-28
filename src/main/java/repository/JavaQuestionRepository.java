@@ -1,15 +1,14 @@
 package repository;
 
 import org.skypro.exam_service.model.Question;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Repository
-public abstract class JavaQuestionRepository implements QuestionRepository {
+@Primary
+public class JavaQuestionRepository implements QuestionRepository {
     private final Set<Question> questions = new HashSet<>();
 
     @Override
@@ -27,5 +26,16 @@ public abstract class JavaQuestionRepository implements QuestionRepository {
     @Override
     public Collection<Question> getAll() {
         return Collections.unmodifiableSet(questions);
+    }
+
+    @Override
+    public Question getRandomQuestion() {
+        if (questions.isEmpty()) {
+            return null;
+        }
+        return questions.stream()
+                .skip(new Random().nextInt(questions.size()))
+                .findFirst()
+                .orElse(null);
     }
 }

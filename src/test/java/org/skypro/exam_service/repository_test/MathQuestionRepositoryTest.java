@@ -1,6 +1,8 @@
 package org.skypro.exam_service.repository_test;
 
+import org.assertj.core.api.AbstractCollectionAssert;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ObjectAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,10 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.skypro.exam_service.exception.QuestionNotFoundException;
-import org.skypro.exam_service.impl.MathQuestionService;
+import org.skypro.exam_service.impl.MathQuestionServiceImpl;
 import org.skypro.exam_service.model.Question;
 import repository.QuestionRepository;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +27,7 @@ class MathQuestionRepositoryTest {
     private QuestionRepository repository;
 
     @InjectMocks
-    private MathQuestionService questionService;
+    private MathQuestionServiceImpl questionService;
 
     private Set<Question> questions;
     private Question question1;
@@ -46,7 +49,7 @@ class MathQuestionRepositoryTest {
     }
 
     @Test
-    public void addQuestion_ShouldReturnAddedQuestion() {
+   public void addQuestion_ShouldReturnAddedQuestion() {
         when(repository.add(question4)).thenReturn(question4);
 
         Question result = questionService.add(question4.getQuestion(), question4.getAnswer());
@@ -78,19 +81,19 @@ class MathQuestionRepositoryTest {
     }
 
     @Test
-    public void getAllQuestions_ShouldReturnAllQuestions() {
+  public void getAllQuestions_ShouldReturnAllQuestions() {
         when(repository.getAll()).thenReturn(questions);
 
         Set<Question> result = new HashSet<>(questionService.getAll());
 
-        Assertions.assertThat(result)
+        AbstractCollectionAssert<?, Collection<? extends Question>, Question, ObjectAssert<Question>> o = Assertions.assertThat(result)
                 .hasSize(3)
                 .containsExactlyInAnyOrder(question1, question2, question3);
         verify(repository, times(1)).getAll();
     }
 
     @Test
-    public void getRandomQuestion_ShouldReturnQuestionFromRepository() {
+   public void getRandomQuestion_ShouldReturnQuestionFromRepository() {
         when(repository.getAll()).thenReturn(Set.of(question1));
 
         Question result = questionService.getRandomQuestion();

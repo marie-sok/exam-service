@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
-import java.util.function.IntPredicate;
 
 @Repository
 public class MathQuestionRepository implements QuestionRepository {
@@ -31,7 +31,13 @@ public class MathQuestionRepository implements QuestionRepository {
     }
 
     @Override
-    public IntPredicate add(String s, String s1) {
-        return null;
+    public Question getRandomQuestion() {
+        if (questions.isEmpty()) {
+            return null;
+        }
+        return questions.stream()
+                .skip(new Random().nextInt(questions.size()))
+                .findFirst()
+                .orElse(null);
     }
 }

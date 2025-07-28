@@ -21,16 +21,12 @@ class JavaQuestionImplTest {
     @InjectMocks
     private JavaQuestionService questionService;
     private Set<Question> questions;
-    private Question question1;
-    private Question question2;
-    private Question question3;
-    private Question question4;
 
     @BeforeEach
     public void beforeEach() {
-        question1 = new Question("Java question 1", "Java answer 1");
-        question2 = new Question("Java question 2", "Java answer 2");
-        question3 = new Question("Java question 3", "Java answer 3");
-        question4 = new Question("Java question 4", "Java answer 4");
+        Question question1 = new Question("Java question 1", "Java answer 1");
+        Question question2 = new Question("Java question 2", "Java answer 2");
+        Question question3 = new Question("Java question 3", "Java answer 3");
+        Question question4 = new Question("Java question 4", "Java answer 4");
     }
 }

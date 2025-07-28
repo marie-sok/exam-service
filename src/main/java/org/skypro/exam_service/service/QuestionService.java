@@ -1,23 +1,15 @@
-package service;
+package org.skypro.exam_service.service;
 
-import model.Question;
+import org.skypro.exam_service.model.Question;
 
 import java.util.Collection;
 
 public interface QuestionService {
-    public static String greet(String name) {
-        if (name == null || name.isEmpty()) {
-            return ("Hello,Anonym");
-        }
-        return ("Hello, " + name);
+    Question add(String question, String answer);
 
-    }
-    public Question add(String question, String answer);
+    Question remove(Question question);
 
-    public Question remove(Question question);
+    Collection<Question> getAll();
 
-    public Collection<Question>getAll();
-
-    public Question getRandomQuestion();
+    Question getRandomQuestion();
 }
-
