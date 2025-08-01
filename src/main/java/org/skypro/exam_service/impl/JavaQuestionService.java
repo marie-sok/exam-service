@@ -15,6 +15,9 @@ public class JavaQuestionService implements QuestionService {
     private final Set<Question> questions = new HashSet<>();
     private final Random random = new Random();
 
+    public JavaQuestionService() {
+    }
+
     @Override
     public Question add(String question, String answer) {
         Question newQuestion = new Question(question, answer);
@@ -23,9 +26,14 @@ public class JavaQuestionService implements QuestionService {
     }
 
     @Override
+    public Question add(Question question) {
+        return null;
+    }
+
+    @Override
     public Question remove(Question question) {
         if (!questions.contains(question)) {
-            throw new QuestionNotFoundException();
+            throw new QuestionNotFoundException(String.format("Question '%s' with answer '%s' not found in repository", question.getQuestion(), question.getAnswer()));
         }
         questions.remove(question);
         return question;

@@ -1,48 +1,80 @@
 package org.skypro.exam_service.service_test;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.skypro.exam_service.exception.TooManyQuestionsRequestedException;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.skypro.exam_service.exception.TooManyQuestionsException;
 import org.skypro.exam_service.impl.ExaminerServiceImpl;
-import org.skypro.exam_service.impl.JavaQuestionService;
 import org.skypro.exam_service.model.Question;
+import org.skypro.exam_service.service.QuestionService;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class ExaminerServiceImplTest {
+
+    @Mock
+    private QuestionService javaQuestionService;
+
+    @Mock
+    private QuestionService mathQuestionService;
+
+    @InjectMocks
     private ExaminerServiceImpl examinerService;
-    private JavaQuestionService javaQuestionService;
 
-    @BeforeEach
-    void setUp() {
-        javaQuestionService = new JavaQuestionService();
-        examinerService = new ExaminerServiceImpl(javaQuestionService);
+    @Test
+    void getQuestion() {
 
-        // Добавляем тестовые вопросы
-        javaQuestionService.add("Q1", "A1");
-        javaQuestionService.add("Q2", "A2");
-        javaQuestionService.add("Q3", "A3");
+        Question q1 = new Question("Q1", "A1");
+        Question q2 = new Question("Q2", "A2");
+
+        when(javaQuestionService.getAll()).thenReturn(Set.of(q1));
+        when(mathQuestionService.getAll()).thenReturn(Set.of(q2));
+        when(javaQuestionService.getRandomQuestion()).thenReturn(q1);
+        when(mathQuestionService.getRandomQuestion()).thenReturn(q2);
+
+
+        Collection<Question> result = examinerService.getQuestions(1);
+
+
+        assertEquals(1, result.size());
     }
 
     @Test
-    void getQuestionsTest() {
-        Collection<Question> questions = examinerService.getQuestions(2);
-        assertEquals(2, questions.size());
+    void getQuestions_shouldThrowWhenNotEnoughQuestions() {
+
+        when(javaQuestionService.getAll()).thenReturn(Set.of());
+        when(mathQuestionService.getAll()).thenReturn(Set.of());
+
+
+        assertThrows(TooManyQuestionsException.class,
+                () -> examinerService.getQuestions(1));
     }
 
     @Test
-    void getTooManyQuestionsTest() {
-        assertThrows(TooManyQuestionsRequestedException.class,
-                () -> examinerService.getQuestions(10));
-    }
+    void getQuestions_shouldReturnUniqueQuestions() {
 
-    @Test
-    void getQuestionsReturnsUniqueQuestionsTest() {
-        Collection<Question> questions = examinerService.getQuestions(3);
-        assertEquals(3, new HashSet<>(questions).size());
+        Question q1 = new Question("Q1", "A1");
+        Question q2 = new Question("Q2", "A2");
+
+        when(javaQuestionService.getAll()).thenReturn(Set.of(q1, q2));
+        when(mathQuestionService.getAll()).thenReturn(Set.of());
+        when(javaQuestionService.getRandomQuestion())
+                .thenReturn(q1)
+                .thenReturn(q2);
+
+
+        Collection<Question> result = examinerService.getQuestions(2);
+
+
+        assertEquals(2, result.size());
+        assertTrue(result.contains(q1));
+        assertTrue(result.contains(q2));
     }
 }

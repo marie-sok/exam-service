@@ -3,7 +3,9 @@ package org.skypro.exam_service.controller;
 import org.skypro.exam_service.model.Question;
 import org.skypro.exam_service.service.QuestionService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 
@@ -16,13 +18,15 @@ public class MathQuestionController {
         this.service = service;
     }
 
-    @PostMapping("/add")
-    public Question addQuestion(@RequestParam String question, @RequestParam String answer) {
+    @GetMapping("/add")
+    public Question addQuestion(@RequestParam String question,
+                                @RequestParam String answer) {
         return service.add(question, answer);
     }
 
-    @DeleteMapping("/remove")
-    public Question removeQuestion(@RequestParam String question, @RequestParam String answer) {
+    @GetMapping("/remove")
+    public Question removeQuestion(@RequestParam String question,
+                                   @RequestParam String answer) {
         return service.remove(new Question(question, answer));
     }
 

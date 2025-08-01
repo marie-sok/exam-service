@@ -1,10 +1,10 @@
-package org.skypro.exam_service.service;
+package org.skypro.exam_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ExamApplication {
+class ExamApplication {
     public static void main(String[] args) {
         SpringApplication.run(ExamApplication.class, args);
     }

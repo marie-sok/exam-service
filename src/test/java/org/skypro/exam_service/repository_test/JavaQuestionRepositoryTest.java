@@ -7,7 +7,7 @@ import org.skypro.exam_service.model.Question;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JavaQuestionServiceTest {
+class JavaQuestionRepositoryTest {
     private final JavaQuestionService service = new JavaQuestionService();
 
     @Test

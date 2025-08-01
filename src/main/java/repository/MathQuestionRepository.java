@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.Set;
 
 @Repository
-public class MathQuestionRepository implements QuestionRepository {
+class MathQuestionRepository implements QuestionRepository {
     private final Set<Question> questions = new HashSet<>();
 
     @Override

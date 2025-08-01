@@ -24,11 +24,13 @@ public class MathServiceImplTest {
     private Set<Question> questions;
     private Assertions Assert;
 
+
     @BeforeEach
     public void beforeEach() {
         Question question1 = new Question("Math question 1", "Math answer 1");
         Question question2 = new Question("Math question 2", "Math answer 2");
         Question question3 = new Question("Math question 3", "Math answer 3");
         Question question4 = new Question("Math question 4", "Math answer 4");
+
     }
 }

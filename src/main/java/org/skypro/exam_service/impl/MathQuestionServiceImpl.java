@@ -5,47 +5,50 @@ import org.skypro.exam_service.model.Question;
 import org.skypro.exam_service.service.QuestionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import repository.QuestionRepository;
 
-import java.util.Collection;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Qualifier("mathQuestionService")
 public class MathQuestionServiceImpl implements QuestionService {
-    private final QuestionRepository repository;
-
-    public MathQuestionServiceImpl(@Qualifier("mathQuestionRepository") QuestionRepository repository) {
-        this.repository = repository;
-    }
+    private final Set<Question> questions = new HashSet<>();
+    private final Random random = new Random();
 
     @Override
     public Question add(String question, String answer) {
-        return repository.add(new Question(question, answer));
+        Question newQuestion = new Question(question, answer);
+        questions.add(newQuestion);
+        return newQuestion;
+    }
+
+    @Override
+    public Question add(Question question) {
+        return null;
     }
 
     @Override
     public Question remove(Question question) {
-        if (!repository.getAll().contains(question)) {
-            throw new QuestionNotFoundException();
+        Objects.requireNonNull(question, "Question cannot be null");
+
+        if (!questions.contains(question)) {
+            throw new QuestionNotFoundException(String.format(
+                    "Question '%s' with answer '%s' not found in repository",
+                    question.getQuestion(),
+                    question.getAnswer()
+            ));
         }
-        return repository.remove(question);
+
+        questions.remove(question);
+        return question;
     }
 
     @Override
     public Collection<Question> getAll() {
-        return repository.getAll();
+        return List.of();
     }
 
     @Override
     public Question getRandomQuestion() {
-        Collection<Question> questions = repository.getAll();
-        if (questions.isEmpty()) {
-            return null;
-        }
-        return questions.stream()
-                .skip(new Random().nextInt(questions.size()))
-                .findFirst()
-                .orElse(null);
+        return null;
     }
 }
