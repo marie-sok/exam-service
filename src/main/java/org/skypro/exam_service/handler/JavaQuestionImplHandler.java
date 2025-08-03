@@ -15,9 +15,9 @@ public class JavaQuestionImplHandler {
         return e.getMessage();
     }
 
-    @ExceptionHandler(IllegalStateException.class)
+    @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleIllegalState(IllegalStateException e) {
+    public String handleIllegalArgument(IllegalArgumentException e) {
         return e.getMessage();
     }
 }

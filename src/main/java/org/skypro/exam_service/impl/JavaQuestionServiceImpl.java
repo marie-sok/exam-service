@@ -2,13 +2,15 @@ package org.skypro.exam_service.impl;
 
 import org.skypro.exam_service.model.Question;
 import org.skypro.exam_service.service.QuestionService;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class JavaQuestionService implements QuestionService {
+@Primary
+public class JavaQuestionServiceImpl implements QuestionService {
     private final Set<Question> questions = ConcurrentHashMap.newKeySet();
     private final Random random = new Random();
 

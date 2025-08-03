@@ -20,13 +20,13 @@ public class JavaQuestionController {
         return questionService.getAll();
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public Question add(@RequestParam String question,
                         @RequestParam String answer) {
         return questionService.add(question, answer);
     }
 
-    @GetMapping("/remove")
+    @DeleteMapping("/remove")
     public Question remove(@RequestParam String question,
                            @RequestParam String answer) {
         return questionService.remove(new Question(question, answer));

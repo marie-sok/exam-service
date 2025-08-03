@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/exam")
+@RequestMapping("/exam/java")
 public class ExamController {
-    private final ExamService examinerService;
+    private final ExamService examService;
 
-    public ExamController(ExamService examinerService) {
-        this.examinerService = examinerService;
+    public ExamController(ExamService examService) {
+        this.examService = examService;
     }
 
     @GetMapping("/get/{amount}")
     public Collection<Question> getQuestions(@PathVariable int amount) {
-        return examinerService.getQuestions(amount);
+        return examService.getQuestions(amount);
     }
 }

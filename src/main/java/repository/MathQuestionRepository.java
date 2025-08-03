@@ -1,5 +1,6 @@
 package repository;
 
+import org.skypro.exam_service.exception.QuestionNotFoundException;
 import org.skypro.exam_service.model.Question;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +22,9 @@ public class MathQuestionRepository implements QuestionRepository {
 
     @Override
     public Question remove(Question question) {
-        questions.remove(question);
+        if (!questions.remove(question)) {
+            throw new QuestionNotFoundException("Question not found");
+        }
         return question;
     }
 
@@ -33,11 +36,11 @@ public class MathQuestionRepository implements QuestionRepository {
     @Override
     public Question getRandomQuestion() {
         if (questions.isEmpty()) {
-            return null;
+            throw new QuestionNotFoundException("No questions available");
         }
         return questions.stream()
                 .skip(new Random().nextInt(questions.size()))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow();
     }
 }

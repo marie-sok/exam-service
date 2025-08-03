@@ -1,5 +1,6 @@
 package org.skypro.exam_service.repository_test;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skypro.exam_service.model.Question;
 import repository.JavaQuestionRepository;
@@ -14,6 +15,10 @@ class JavaQuestionRepositoryTest {
     private final Question question1 = new Question("Q1", "A1");
     private final Question question2 = new Question("Q2", "A2");
 
+    @BeforeEach
+    void setUp() {
+        repository = new JavaQuestionRepository();
+    }
 
     @Test
     void add_shouldAddQuestionAndReturnIt() {
@@ -21,7 +26,6 @@ class JavaQuestionRepositoryTest {
         assertEquals(question1, result);
         assertTrue(repository.getAll().contains(question1));
     }
-
 
     @Test
     void remove_shouldRemoveQuestionAndReturnIt() {
@@ -35,7 +39,6 @@ class JavaQuestionRepositoryTest {
     void remove_shouldThrowWhenQuestionNotExists() {
         assertThrows(NoSuchElementException.class, () -> repository.remove(question1));
     }
-
 
     @Test
     void getAll_shouldReturnUnmodifiableCollection() {
@@ -51,6 +54,5 @@ class JavaQuestionRepositoryTest {
 
         Question result = repository.getRandomQuestion();
         assertTrue(result.equals(question1) || result.equals(question2));
-
     }
 }
