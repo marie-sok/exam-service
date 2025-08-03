@@ -4,42 +4,38 @@ import org.skypro.exam_service.exception.TooManyQuestionsException;
 import org.skypro.exam_service.model.Question;
 import org.skypro.exam_service.service.ExamService;
 import org.skypro.exam_service.service.QuestionService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 @Service
 public class ExaminerServiceImpl implements ExamService {
-    private final QuestionService javaQuestionService;
-    private final QuestionService mathQuestionService;
-    private final Random random = new Random();
+    private final QuestionService questionService;
 
-    public ExaminerServiceImpl(
-            @Qualifier("javaQuestionService") QuestionService javaQuestionService,
-            @Qualifier("mathQuestionService") QuestionService mathQuestionService) {
-        this.javaQuestionService = javaQuestionService;
-        this.mathQuestionService = mathQuestionService;
+    public ExaminerServiceImpl(QuestionService questionService) {
+        this.questionService = questionService;
     }
 
     @Override
-    public Collection <Question> getQuestions(int amount) {
-        Set<Question> allQuestions = new HashSet<>();
-        allQuestions.addAll(javaQuestionService.getAll());
-        allQuestions.addAll(mathQuestionService.getAll());
+    public Collection<Question> getQuestions(int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
 
+        Collection<Question> allQuestions = questionService.getAll();
         if (amount > allQuestions.size()) {
-            throw new TooManyQuestionsException();
+            throw new TooManyQuestionsException(
+                    "Requested " + amount + " questions, but only " + allQuestions.size() + " available"
+            );
         }
 
         Set<Question> result = new HashSet<>();
         while (result.size() < amount) {
-            QuestionService service = random.nextBoolean() ? javaQuestionService : mathQuestionService;
-            result.add(service.getRandomQuestion());
+            result.add(questionService.getRandomQuestion());
         }
+
         return result;
     }
 }

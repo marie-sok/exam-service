@@ -1,7 +1,6 @@
-package org.skypro.exam_service.impl;
+package org.skypro.exam_service.service;
 
 import org.skypro.exam_service.model.Question;
-import org.skypro.exam_service.service.QuestionService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

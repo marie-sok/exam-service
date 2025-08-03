@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class TooManyQuestionsException extends RuntimeException {
-    public TooManyQuestionsException() {
-        super("Requested more questions than available");
+    public TooManyQuestionsException(String message) {
+        super(message);
     }
 }

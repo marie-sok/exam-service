@@ -1,35 +1,34 @@
 package org.skypro.exam_service.controller;
 
 import org.skypro.exam_service.model.Question;
-import org.skypro.exam_service.service.QuestionService;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.skypro.exam_service.service.JavaQuestionService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+@RestController
 @RequestMapping("/exam/java")
 public class JavaQuestionController {
-    private final QuestionService service;
+    private final JavaQuestionService questionService;
 
-    public JavaQuestionController(@Qualifier("javaQuestionService") QuestionService service) {
-        this.service = service;
+    public JavaQuestionController(JavaQuestionService questionService) {
+        this.questionService = questionService;
+    }
+
+    @GetMapping
+    public Collection<Question> getAll() {
+        return questionService.getAll();
     }
 
     @GetMapping("/add")
     public Question add(@RequestParam String question,
                         @RequestParam String answer) {
-        return service.add(question, answer);
+        return questionService.add(question, answer);
     }
 
     @GetMapping("/remove")
     public Question remove(@RequestParam String question,
                            @RequestParam String answer) {
-        return service.remove(new Question(question, answer));
-    }
-
-    @GetMapping("/value")
-    public Collection<Question> getAll() {
-        return service.getAll();
+        return questionService.remove(new Question(question, answer));
     }
 }

@@ -32,12 +32,4 @@ public class Question {
     public int hashCode() {
         return Objects.hash(question, answer);
     }
-
-    @Override
-    public String toString() {
-        return "Question{" +
-                "question='" + question + '\'' +
-                ", answer='" + answer + '\'' +
-                '}';
-    }
 }

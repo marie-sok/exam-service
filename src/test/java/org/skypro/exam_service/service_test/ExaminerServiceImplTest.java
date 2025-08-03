@@ -18,63 +18,31 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ExaminerServiceImplTest {
-
     @Mock
-    private QuestionService javaQuestionService;
-
-    @Mock
-    private QuestionService mathQuestionService;
+    private QuestionService questionService;
 
     @InjectMocks
     private ExaminerServiceImpl examinerService;
 
     @Test
-    void getQuestion() {
-
+    void getQuestionsTest() {
         Question q1 = new Question("Q1", "A1");
         Question q2 = new Question("Q2", "A2");
 
-        when(javaQuestionService.getAll()).thenReturn(Set.of(q1));
-        when(mathQuestionService.getAll()).thenReturn(Set.of(q2));
-        when(javaQuestionService.getRandomQuestion()).thenReturn(q1);
-        when(mathQuestionService.getRandomQuestion()).thenReturn(q2);
-
-
-        Collection<Question> result = examinerService.getQuestions(1);
-
-
-        assertEquals(1, result.size());
-    }
-
-    @Test
-    void getQuestions_shouldThrowWhenNotEnoughQuestions() {
-
-        when(javaQuestionService.getAll()).thenReturn(Set.of());
-        when(mathQuestionService.getAll()).thenReturn(Set.of());
-
-
-        assertThrows(TooManyQuestionsException.class,
-                () -> examinerService.getQuestions(1));
-    }
-
-    @Test
-    void getQuestions_shouldReturnUniqueQuestions() {
-
-        Question q1 = new Question("Q1", "A1");
-        Question q2 = new Question("Q2", "A2");
-
-        when(javaQuestionService.getAll()).thenReturn(Set.of(q1, q2));
-        when(mathQuestionService.getAll()).thenReturn(Set.of());
-        when(javaQuestionService.getRandomQuestion())
+        when(questionService.getAll()).thenReturn(Set.of(q1, q2));
+        when(questionService.getRandomQuestion())
                 .thenReturn(q1)
                 .thenReturn(q2);
 
-
         Collection<Question> result = examinerService.getQuestions(2);
-
-
         assertEquals(2, result.size());
         assertTrue(result.contains(q1));
         assertTrue(result.contains(q2));
+    }
+
+    @Test
+    void getQuestionsTooManyTest() {
+        when(questionService.getAll()).thenReturn(Set.of(new Question("Q", "A")));
+        assertThrows(TooManyQuestionsException.class, () -> examinerService.getQuestions(2));
     }
 }

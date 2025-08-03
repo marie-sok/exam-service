@@ -1,32 +1,41 @@
 package org.skypro.exam_service.service_test;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.skypro.exam_service.impl.JavaQuestionService;
+import org.junit.jupiter.api.Test;
 import org.skypro.exam_service.model.Question;
-import repository.QuestionRepository;
+import org.skypro.exam_service.service.JavaQuestionService;
 
-import java.util.Set;
+import java.util.Collection;
 
-@ExtendWith(MockitoExtension.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class JavaQuestionImplTest {
+    private final JavaQuestionService service = new JavaQuestionService();
 
+    @Test
+    void addAndGetAllTest() {
+        Question q1 = service.add("Q1", "A1");
+        Question q2 = service.add("Q2", "A2");
 
-    @Mock
-    private QuestionRepository repository;
+        Collection<Question> all = service.getAll();
+        assertEquals(2, all.size());
+        assertTrue(all.contains(q1));
+        assertTrue(all.contains(q2));
+    }
 
-    @InjectMocks
-    private JavaQuestionService questionService;
-    private Set<Question> questions;
+    @Test
+    void removeTest() {
+        Question q = service.add("Q", "A");
+        assertEquals(q, service.remove(q));
+        assertEquals(0, service.getAll().size());
+    }
 
-    @BeforeEach
-    public void beforeEach() {
-        Question question1 = new Question("Java question 1", "Java answer 1");
-        Question question2 = new Question("Java question 2", "Java answer 2");
-        Question question3 = new Question("Java question 3", "Java answer 3");
-        Question question4 = new Question("Java question 4", "Java answer 4");
+    @Test
+    void getRandomQuestionTest() {
+        Question q1 = service.add("Q1", "A1");
+        Question q2 = service.add("Q2", "A2");
+
+        Question random = service.getRandomQuestion();
+        assertTrue(random.equals(q1) || random.equals(q2));
     }
 }

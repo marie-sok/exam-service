@@ -18,19 +18,16 @@ public class MathQuestionController {
         this.service = service;
     }
 
-    @GetMapping("/add")
     public Question addQuestion(@RequestParam String question,
                                 @RequestParam String answer) {
         return service.add(question, answer);
     }
 
-    @GetMapping("/remove")
     public Question removeQuestion(@RequestParam String question,
                                    @RequestParam String answer) {
         return service.remove(new Question(question, answer));
     }
 
-    @GetMapping("/value")
     public Collection<Question> getQuestions() {
         return service.getAll();
     }
