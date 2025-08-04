@@ -1,34 +1,34 @@
-package controller;
+package org.skypro.exam_service.controller;
 
-import model.Question;
-import org.skypro.exam_service.controller.GetMapping;
-import org.skypro.exam_service.controller.RequestParam;
-import org.skypro.exam_service.controller.RestController;
-import service.QuestionService;
+import org.skypro.exam_service.model.Question;
+import org.skypro.exam_service.service.JavaQuestionService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
 @RestController
-@GetMapping("/exam")
+@RequestMapping("/exam/java")
 public class JavaQuestionController {
+    private final JavaQuestionService questionService;
 
-    public final QuestionService service;
-
-    public JavaQuestionController(QuestionService service) {
-        this.service = service;
+    public JavaQuestionController(JavaQuestionService questionService) {
+        this.questionService = questionService;
     }
 
-    @GetMapping("/java/add")
-    public Question addQuestion(@RequestParam("question") String question, @RequestParam("answer") String answer){
-        return service.add(question,answer);
+    @GetMapping
+    public Collection<Question> getAll() {
+        return questionService.getAll();
     }
-    @GetMapping("/java/remove")
-    public Question removeQuestion(@RequestParam("question") String question, @RequestParam("answer") String answer){
-        Question newQuestion = new Question(question, answer);
-        return service.remove(newQuestion);
+
+    @PostMapping("/add")
+    public Question add(@RequestParam String question,
+                        @RequestParam String answer) {
+        return questionService.add(question, answer);
     }
-    @GetMapping("/java")
-    public Collection<Question> getQuestions() {
-        return service.getAll();
+
+    @DeleteMapping("/remove")
+    public Question remove(@RequestParam String question,
+                           @RequestParam String answer) {
+        return questionService.remove(new Question(question, answer));
     }
 }

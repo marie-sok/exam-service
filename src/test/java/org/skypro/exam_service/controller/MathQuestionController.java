@@ -1,10 +1,11 @@
 package org.skypro.exam_service.controller;
 
-import model.Question;
+
+import org.skypro.exam_service.model.Question;
+import org.skypro.exam_service.service.QuestionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import service.QuestionService;
 
 import java.util.Collection;
 

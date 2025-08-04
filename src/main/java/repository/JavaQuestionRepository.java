@@ -1,38 +1,35 @@
 package repository;
 
-import model.Question;
+import org.skypro.exam_service.model.Question;
 import org.springframework.stereotype.Repository;
-import java.util.List;
-import java.util.Random;
+
 import java.util.*;
 
 @Repository
-public class JavaQuestionRepository implements QuestionRepository {
-    private Set<Question> questions = new HashSet<>();
-    @Override
-    public Question add(String question, String answer) {
-        Question newQuestion = new Question(question, answer);
-        questions.add(newQuestion);
-        return newQuestion;
-    }
+public class JavaQuestionRepository {
+    private final Set<Question> questions = new HashSet<>();
+    private final Random random = new Random();
 
-
-    @Override
-    public Question remove(Question question) {
-        questions.remove(question);
+    public Question add(Question question) {
+        questions.add(question);
         return question;
     }
-    @Override
+
+    public Question remove(Question question) {
+        if (!questions.remove(question)) {
+            throw new NoSuchElementException("Question not found");
+        }
+        return question;
+    }
+
     public Collection<Question> getAll() {
         return Collections.unmodifiableSet(questions);
     }
-    @Override
+
     public Question getRandomQuestion() {
-        List<String> list = List.of("");
-        Random random = new Random();
-        int randomIndex = random.nextInt(list.size());
-        String randomElement = list.get(randomIndex);
-        System.out.println(randomElement);
-        return null;
+        if (questions.isEmpty()) {
+            throw new NoSuchElementException("No questions available");
+        }
+        return new ArrayList<>(questions).get(random.nextInt(questions.size()));
     }
 }

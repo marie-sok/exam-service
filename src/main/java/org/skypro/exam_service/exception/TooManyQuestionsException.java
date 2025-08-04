@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-class QuestionIllegalArgumentException extends RuntimeException {
-    public QuestionIllegalArgumentException() {
-        super("Requested more questions than available");
+public class TooManyQuestionsException extends RuntimeException {
+    public TooManyQuestionsException(String message) {
+        super(message);
     }
 }

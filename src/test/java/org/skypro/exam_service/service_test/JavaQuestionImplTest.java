@@ -1,36 +1,40 @@
 package org.skypro.exam_service.service_test;
 
-import impl.JavaQuestionService;
-import model.Question;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import repository.QuestionRepository;
+import org.junit.jupiter.api.Test;
+import org.skypro.exam_service.model.Question;
+import org.skypro.exam_service.service.JavaQuestionService;
 
-import java.util.Set;
+import java.util.Collection;
 
-@ExtendWith(MockitoExtension.class)
-class JavaQuestionServiceTest {
+import static org.junit.jupiter.api.Assertions.*;
 
+class JavaQuestionImplTest {
+    private final JavaQuestionService service = new JavaQuestionService();
 
-    @Mock
-    private QuestionRepository repository;
+    @Test
+    void addAndGetAllTest() {
+        Question q1 = service.add("Q1", "A1");
+        Question q2 = service.add("Q2", "A2");
 
-    @InjectMocks
-    private JavaQuestionService questionService;
-    private Set<Question> questions;
-    private Question question1;
-    private Question question2;
-    private Question question3;
-    private Question question4;
+        Collection<Question> all = service.getAll();
+        assertEquals(2, all.size());
+        assertTrue(all.contains(q1));
+        assertTrue(all.contains(q2));
+    }
 
-    @BeforeEach
-    public void beforeEach() {
-        question1 = new Question("Java question 1", "Java answer 1");
-        question2 = new Question("Java question 2", "Java answer 2");
-        question3 = new Question("Java question 3", "Java answer 3");
-        question4 = new Question("Java question 4", "Java answer 4");
+    @Test
+    void removeTest() {
+        Question q = service.add("Q", "A");
+        assertEquals(q, service.remove(q));
+        assertEquals(0, service.getAll().size());
+    }
+
+    @Test
+    void getRandomQuestionTest() {
+        Question q1 = service.add("Q1", "A1");
+        Question q2 = service.add("Q2", "A2");
+
+        Question random = service.getRandomQuestion();
+        assertTrue(random.equals(q1) || random.equals(q2));
     }
 }
